@@ -3,6 +3,8 @@ package com.truechain.task.plat.form.controller;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
 import com.truechain.task.plat.form.model.entity.AuthRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 角色Controller
  */
+@RestController("/role")
 public class RoleController extends BasicController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
     /**
      * 获取角色关联的(roleId)对应用户列表
