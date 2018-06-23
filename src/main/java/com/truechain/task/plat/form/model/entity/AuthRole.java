@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+@Table(name = "AuthRole")
 @Entity
 @DynamicUpdate
 public class AuthRole extends BaseEntity implements Serializable {

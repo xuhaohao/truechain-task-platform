@@ -1,11 +1,33 @@
 server:
   port: 8080
-app:
-  swagger:
-    enable: true
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url:
-    username: 
-    password:
+    url: jdbc:mysql://127.0.0.1:3306/usthe?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 100
+      minimum-idle: 15
+      connection-timeout: 30000
+      idle-timeout: 180000
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: com.truechain.task.plat.form.core.ImprovedNamingStrategy
+    show-sql: true
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+app:
+  swagger:
+    enable: true
+  token:
+    header: "Token"
+  agent:
+    header: "Agent"

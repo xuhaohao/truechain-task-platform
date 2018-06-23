@@ -20,7 +20,8 @@ import java.util.List;
 /**
  * 用户Controller
  */
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 public class UserController extends BasicController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);

@@ -5,6 +5,7 @@ import com.truechain.task.plat.form.core.Wrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +20,6 @@ public class ResourceController extends BasicController {
 
     /**
      * 获取用户授权的菜单
-     *
-     * @return
      */
     public Wrapper getAuthorityMenu() {
         return WrapMapper.ok();
@@ -55,9 +54,10 @@ public class ResourceController extends BasicController {
 
     /**
      * 删除菜单
+     *
      * @return
      */
-    public Wrapper deleteMenu(){
+    public Wrapper deleteMenu() {
         return WrapMapper.ok();
     }
 }

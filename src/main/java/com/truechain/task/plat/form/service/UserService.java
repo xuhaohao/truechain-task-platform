@@ -1,5 +1,6 @@
 package com.truechain.task.plat.form.service;
 
+import com.truechain.task.plat.form.model.dto.AccountDTO;
 import com.truechain.task.plat.form.model.entity.AuthRole;
 import com.truechain.task.plat.form.model.entity.AuthUser;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,6 @@ public interface UserService {
     Page<AuthUser> getUserPageByCriteria(Pageable pageable);
 
     void addUserRole(AuthRole role);
+
+    AccountDTO getAccount(String userName);
 }

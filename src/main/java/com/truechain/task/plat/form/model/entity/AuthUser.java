@@ -5,9 +5,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
+@Table(name = "AuthUser")
 @Entity
 @DynamicUpdate
 public class AuthUser extends BaseEntity implements Serializable {

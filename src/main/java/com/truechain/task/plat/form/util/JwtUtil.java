@@ -1,33 +1,99 @@
 package com.truechain.task.plat.form.util;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.compression.DefaultCompressionCodecResolver;
-import org.apache.shiro.authc.AuthenticationException;
-import org.springframework.util.StringUtils;
+import com.truechain.task.plat.form.core.BusinessException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Jwt工具类
  */
 public class JwtUtil {
 
-    public static final String SECRET_KEY = "?::4343fdf4fdf6cvf):";
-
-    private static CompressionCodecResolver codecResolver = new DefaultCompressionCodecResolver();
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     /**
-     * 签发
+     * 验证token合法性
      *
-     * @param subject
-     * @param roles
-     * @param permissions
+     * @param token
+     * @param salt
+     * @return
+     */
+    public static boolean verifyToken(String token, String salt) {
+        Key key = generalKey(salt);
+        try {
+            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            return true;
+        } catch (Exception e) {
+            logger.error("---方法verifyToken---错误信息：" + e.getMessage(), e);
+            if (e.getMessage().contains("JWT expired")) {
+                throw new BusinessException("JWT expired");
+            }
+            if (e.getMessage().contains("not match locally computed signature")) {
+                throw new BusinessException("keyNotMatch");
+            }
+            return false;
+        }
+    }
+
+    /**
+     * 解析被压缩的token值并获取redisKey
+     *
+     * @param token
+     * @param salt
+     * @return
+     */
+    public static String getRedisKeyByToken(String token, String salt) {
+        // 得到Key
+        Key key = generalKey(salt);
+        try {
+            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            return (String) claims.get("payload");
+        } catch (Exception e) {
+            logger.error("---方法getRedisKeyByToken---错误信息：" + e.getMessage(), e);
+            if (e.getMessage().contains("JWT expired"))
+                return "expired";
+            if (e.getMessage().contains("not match locally computed signature"))
+                return "keyNotMatch";
+            return "invalid";
+        }
+    }
+
+    /**
+     * 根据自定义的Constant的字符串生成的Key
+     *
+     * @param salt 私钥盐
+     * @return
+     */
+    private static Key generalKey(String salt) {
+        if (null == salt || "".equals(salt))
+            return null;
+        salt = "truechain" + salt;
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+        String printBase64Binary = DatatypeConverter.printBase64Binary(salt.getBytes());
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(printBase64Binary);
+        // 根据给定的字节数组构造一个密钥。
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        return signingKey;
+    }
+
+    /**
+     * createToken
+     *
+     * @param salt              私钥盐
+     * @param redisKey
      * @param expireMillisecond 过期时间（毫秒）
      * @return
      */
-    public static String createToken(String subject, String roles, String permissions, long expireMillisecond) {
+    public static String createToken(String salt, String redisKey, long expireMillisecond) {
         String issuer = "truechain";
         // 定义算法
         long nowMillis = System.currentTimeMillis();
@@ -36,50 +102,14 @@ public class JwtUtil {
         Date nbf = new Date(nowMillis - 180000L);
         // 默认3天过期时间
         Date exp = new Date(nowMillis + expireMillisecond);
-        byte[] secreKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        Key signingKey = generalKey(salt);
 
         // 构造JWT三部分（header,payload,Signature），为了防止token的payload被恶意解析后知道redisKey的真实含义，此处用airoland来作为保存字段以作混淆
-        JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString()).setHeaderParam("typ", "JWT").setHeaderParam("alg", "HS256")
-                .setIssuedAt(now).setIssuer(issuer).signWith(SignatureAlgorithm.HS512, secreKeyBytes);
-        if (!StringUtils.isEmpty(roles)) {
-            builder.claim("roles", roles);
-        }
-        if (!StringUtils.isEmpty(permissions)) {
-            builder.claim("perms", permissions);
-        }
+        JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT").setHeaderParam("alg", "HS256")
+                .setIssuedAt(now).setIssuer(issuer).claim("payload", redisKey).signWith(SignatureAlgorithm.HS512, signingKey);
         // 添加过期时间，和token不被接受时间
         builder.setExpiration(exp).setNotBefore(nbf);
         // 生成压缩的字符串
         return builder.compact();
     }
-
-    /**
-     * getClaims
-     *
-     * @param jwt
-     * @return
-     */
-    public static Claims verifyToken(String jwt) {
-        Claims claims = null;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
-                    .parseClaimsJws(jwt)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            throw new AuthenticationException("JWT 令牌过期:" + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            throw new AuthenticationException("JWT 令牌无效:" + e.getMessage());
-        } catch (MalformedJwtException e) {
-            throw new AuthenticationException("JWT 令牌格式错误:" + e.getMessage());
-        } catch (SignatureException e) {
-            throw new AuthenticationException("JWT 令牌签名无效:" + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new AuthenticationException("JWT 令牌参数异常:" + e.getMessage());
-        } catch (Exception e) {
-            throw new AuthenticationException("JWT 令牌错误:" + e.getMessage());
-        }
-        return claims;
-    }
-
 }

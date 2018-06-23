@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 角色Controller
  */
-@RestController("/role")
+@RestController
+@RequestMapping("/role")
 public class RoleController extends BasicController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
@@ -94,7 +95,7 @@ public class RoleController extends BasicController {
     /**
      * 添加角色
      */
-    @PostMapping("")
+    @PostMapping("/addRole")
     public Wrapper addRole(@RequestBody AuthRole role) {
         return WrapMapper.ok();
     }
@@ -102,7 +103,7 @@ public class RoleController extends BasicController {
     /**
      * 更新角色
      */
-    @PutMapping("")
+    @PostMapping("/updateRole")
     public Wrapper updateRole(@RequestBody AuthRole role) {
         return WrapMapper.ok();
     }
