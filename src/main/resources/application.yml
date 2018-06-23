@@ -1,0 +1,11 @@
+server:
+  port: 8080
+app:
+  swagger:
+    enable: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.75.77.82:3306/usthe?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: yzf123!@#
