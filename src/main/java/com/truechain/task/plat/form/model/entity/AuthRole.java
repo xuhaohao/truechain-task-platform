@@ -21,6 +21,9 @@ public class AuthRole extends BaseEntity implements Serializable {
 
     private Short status;
 
+    @Transient
+    private Integer userId;
+
     @ManyToMany(mappedBy = "roles")
     private List<AuthUser> users;
 
@@ -52,4 +55,27 @@ public class AuthRole extends BaseEntity implements Serializable {
         this.status = status;
     }
 
+    public List<AuthUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<AuthUser> users) {
+        this.users = users;
+    }
+
+    public List<AuthResource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<AuthResource> resources) {
+        this.resources = resources;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

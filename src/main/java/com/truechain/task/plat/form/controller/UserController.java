@@ -1,45 +1,57 @@
 package com.truechain.task.plat.form.controller;
 
+import com.truechain.task.plat.form.core.BusinessException;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.truechain.task.plat.form.model.entity.AuthRole;
+import com.truechain.task.plat.form.model.entity.AuthUser;
+import com.truechain.task.plat.form.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户Controller
  */
 public class UserController extends BasicController {
 
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取用户列表
-     *
-     * @param start
-     * @param limit
-     * @return
      */
-    public Wrapper getUserList(@PathVariable Integer start, @PathVariable Integer limit) {
-        return WrapMapper.ok();
+    @PostMapping("/getUserPage")
+    public Wrapper getUserPage(@RequestParam int pageIndex, @RequestParam int pageSize) {
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+        Page<AuthUser> userPage = userService.getUserPageByCriteria(pageable);
+        return WrapMapper.ok(userPage);
     }
 
     /**
      * 获取对应用户角色
      */
-    @GetMapping("/role/{appId}")
-    public Wrapper getUserRoleList(@PathVariable String appId) {
-        return WrapMapper.ok();
+    @GetMapping("/getUserRoleList")
+    public Wrapper getUserRoleList(@RequestParam Integer userId) {
+        AuthUser user = userService.getUserById(userId);
+        if (null == user) {
+            throw new BusinessException("用户不存在");
+        }
+        List<AuthRole> roleList = user.getRoles();
+        return WrapMapper.ok(roleList);
     }
 
     /**
      * 给用户授权添加角色
      */
-    @PostMapping("/authority/role")
-    public Wrapper authorityUserRole(HttpServletRequest request) {
+    @PostMapping("/authorityUserRole")
+    public Wrapper authorityUserRole(@RequestBody AuthRole role) {
+        userService.addUserRole(role);
         return WrapMapper.ok();
     }
 
