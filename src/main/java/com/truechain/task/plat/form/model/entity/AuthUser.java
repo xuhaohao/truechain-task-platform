@@ -2,10 +2,7 @@ package com.truechain.task.plat.form.model.entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -35,6 +32,9 @@ public class AuthUser extends BaseEntity implements Serializable {
     private Short status;
 
     private Byte resource;
+
+    @Transient
+    private Integer roleId;
 
     @ManyToMany
     @JoinTable(name = "auth_user_role")
@@ -118,6 +118,14 @@ public class AuthUser extends BaseEntity implements Serializable {
 
     public void setResource(Byte resource) {
         this.resource = resource;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public List<AuthRole> getRoles() {

@@ -1,5 +1,6 @@
 package com.truechain.task.plat.form.service;
 
+import com.truechain.task.plat.form.model.dto.LoginDTO;
 import com.truechain.task.plat.form.model.entity.AuthUser;
 
 import java.util.Map;
@@ -21,7 +22,7 @@ public interface AccountService {
      * @param password
      * @return
      */
-    Map login(String userName, String password);
+    LoginDTO login(String userName, String password);
 
     /**
      * 刷新Token

@@ -1,7 +1,6 @@
 package com.truechain.task.plat.form.security;
 
 import com.truechain.task.plat.form.config.AppProperties;
-import com.truechain.task.plat.form.core.BusinessException;
 import com.truechain.task.plat.form.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,9 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
@@ -47,12 +49,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             return false;
         }
-        String sessionId = stringRedisTemplate.opsForValue().get(JwtUtil.getRedisKeyByToken(token, salt));
-        if (StringUtils.isEmpty(sessionId)) {
-            throw new BusinessException("在其他地方登录");
-        }
 
         //鉴权
+        permissionService.checkPermission();
         return true;
     }
 

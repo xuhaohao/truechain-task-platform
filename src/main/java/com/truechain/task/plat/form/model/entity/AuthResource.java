@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,9 @@ public class AuthResource extends BaseEntity implements Serializable {
     private String icon;
 
     private Short status;
+
+    @Transient
+    private Integer roleId;
 
     @ManyToMany(mappedBy = "resources")
     private List<AuthRole> roles;
@@ -87,5 +91,21 @@ public class AuthResource extends BaseEntity implements Serializable {
 
     public void setStatus(Short status) {
         this.status = status;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public List<AuthRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<AuthRole> roles) {
+        this.roles = roles;
     }
 }

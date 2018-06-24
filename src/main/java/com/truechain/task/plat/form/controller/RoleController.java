@@ -3,11 +3,14 @@ package com.truechain.task.plat.form.controller;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
 import com.truechain.task.plat.form.model.entity.AuthRole;
+import com.truechain.task.plat.form.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 角色Controller
@@ -18,77 +21,35 @@ public class RoleController extends BasicController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-    /**
-     * 获取角色关联的(roleId)对应用户列表
-     */
-    @GetMapping("user/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getUserListByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
-
-    /**
-     * 获取角色未关联的用户列
-     */
-    @GetMapping("user/-/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getUserListExtendByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
-
-
-    /**
-     * 获取角色(roleId)所被授权的API资源
-     */
-    @GetMapping("api/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getRestApiExtendByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
-
-    /**
-     * 获取角色(roleId)未被授权的API资源
-     */
-    @GetMapping("api/-/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getRestApiByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
-
-    /**
-     * 获取角色(roleId)所被授权的menu资源
-     */
-    @GetMapping("menu/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getMenusByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
-
-    /**
-     * 获取角色(roleId)未被授权的menu资源
-     */
-    @GetMapping("menu/-/{roleId}/{currentPage}/{pageSize}")
-    public Wrapper getMenusExtendByRoleId(@PathVariable Integer roleId, @PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
-    }
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 授权资源给角色
      */
-    @PostMapping("/authority/resource")
-    public Wrapper authorityRoleResource(HttpServletRequest request) {
+    @PostMapping("/authorityRoleResource")
+    public Wrapper authorityRoleResource(@RequestParam Integer roleId, @RequestParam Integer resourceId) {
+        roleService.addRoleResource(roleId, resourceId);
         return WrapMapper.ok();
     }
 
     /**
      * 删除对应的角色的授权资源
      */
-    @DeleteMapping("/authority/resource/{roleId}/{resourceId}")
-    public Wrapper deleteAuthorityRoleResource(@PathVariable Integer roleId, @PathVariable Integer resourceId) {
+    @DeleteMapping("/deleteAuthorityRoleResource")
+    public Wrapper deleteAuthorityRoleResource(@RequestParam Integer roleId, @RequestParam Integer resourceId) {
+        roleService.deleteRoleResource(roleId, resourceId);
         return WrapMapper.ok();
     }
 
     /**
      * 获取角色
      */
-    @GetMapping("{currentPage}/{pageSize}")
-    public Wrapper getRoles(@PathVariable Integer currentPage, @PathVariable Integer pageSize) {
-        return WrapMapper.ok();
+    @PostMapping("/getRolePage")
+    public Wrapper getRolePage(@RequestParam Integer pageIndex, @RequestParam Integer pageSize) {
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+        Page<AuthRole> rolePage = roleService.getRolePageByCriteria(null, pageable);
+        return WrapMapper.ok(rolePage);
 
     }
 
@@ -97,6 +58,7 @@ public class RoleController extends BasicController {
      */
     @PostMapping("/addRole")
     public Wrapper addRole(@RequestBody AuthRole role) {
+        roleService.addRole(role);
         return WrapMapper.ok();
     }
 
@@ -105,14 +67,16 @@ public class RoleController extends BasicController {
      */
     @PostMapping("/updateRole")
     public Wrapper updateRole(@RequestBody AuthRole role) {
+        roleService.updateRole(role);
         return WrapMapper.ok();
     }
 
     /**
      * 根据角色ID删除角色
      */
-    @DeleteMapping("{roleId}")
-    public Wrapper deleteRoleByRoleId(@PathVariable Integer roleId) {
+    @PostMapping("/deleteRole")
+    public Wrapper deleteRoleByRoleId(@RequestParam Integer roleId) {
+        roleService.deleteRoleByRoleId(roleId);
         return WrapMapper.ok();
     }
 

@@ -3,6 +3,7 @@ package com.truechain.task.plat.form.controller;
 import com.google.common.base.Preconditions;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
+import com.truechain.task.plat.form.model.dto.LoginDTO;
 import com.truechain.task.plat.form.model.entity.AuthRole;
 import com.truechain.task.plat.form.model.entity.AuthUser;
 import com.truechain.task.plat.form.service.AccountService;
@@ -50,8 +51,8 @@ public class AccountController extends BasicController {
      */
     @PostMapping("/login")
     public Wrapper login(@RequestParam String userName, @RequestParam String password) {
-        Map<String, Object> result = accountService.login(userName, password);
-        return WrapMapper.ok(result);
+        LoginDTO loginDTO = accountService.login(userName, password);
+        return WrapMapper.ok(loginDTO);
     }
 
 

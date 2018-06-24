@@ -35,7 +35,7 @@ public class UserController extends BasicController {
     @PostMapping("/getUserPage")
     public Wrapper getUserPage(@RequestParam int pageIndex, @RequestParam int pageSize) {
         Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
-        Page<AuthUser> userPage = userService.getUserPageByCriteria(pageable);
+        Page<AuthUser> userPage = userService.getUserPageByCriteria(null, pageable);
         return WrapMapper.ok(userPage);
     }
 
@@ -53,19 +53,44 @@ public class UserController extends BasicController {
     }
 
     /**
+     * 获取角色关联的(roleId)对应用户列表
+     */
+    @GetMapping("/getUserListByRoleId")
+    public Wrapper getUserListByRoleId(@RequestParam Integer roleId, @RequestParam Integer pageIndex, @RequestParam Integer pageSize) {
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+        AuthUser authUser = new AuthUser();
+        authUser.setRoleId(roleId);
+        Page<AuthUser> userPage = userService.getUserPageByCriteria(authUser, pageable);
+        return WrapMapper.ok(userPage);
+    }
+
+    /**
+     * 获取角色未关联的用户列
+     */
+    @GetMapping("/getUserListExtendByRoleId")
+    public Wrapper getUserListExtendByRoleId(@RequestParam Integer roleId, @RequestParam Integer pageIndex, @RequestParam Integer pageSize) {
+        Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+        AuthUser authUser = new AuthUser();
+        authUser.setRoleId(roleId);
+        Page<AuthUser> userPage = userService.getUserPageByCriteria(authUser, pageable);
+        return WrapMapper.ok(userPage);
+    }
+
+    /**
      * 给用户授权添加角色
      */
     @PostMapping("/authorityUserRole")
-    public Wrapper authorityUserRole(@RequestBody AuthRole role) {
-        userService.addUserRole(role);
+    public Wrapper authorityUserRole(@RequestParam Integer userId, @RequestParam Integer roleId) {
+        userService.addUserRole(userId, roleId);
         return WrapMapper.ok();
     }
 
     /**
      * 删除已经授权的用户角色
      */
-    @DeleteMapping("/authority/role/{uid}/{roleId}")
-    public Wrapper deleteAuthorityUserRole(@PathVariable String uid, @PathVariable Integer roleId) {
+    @DeleteMapping("/deleteAuthorityUserRole")
+    public Wrapper deleteAuthorityUserRole(@RequestParam Integer userId, @RequestParam Integer roleId) {
+        userService.deleteUserRole(userId, roleId);
         return WrapMapper.ok();
     }
 
@@ -75,6 +100,7 @@ public class UserController extends BasicController {
      */
     @PostMapping("/exit")
     public Wrapper accountExit(HttpServletRequest request) {
+
         return WrapMapper.ok();
     }
 }

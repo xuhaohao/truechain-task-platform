@@ -1,13 +1,10 @@
 package com.truechain.task.plat.form.service.impl;
 
 import com.truechain.task.plat.form.core.BusinessException;
-import com.truechain.task.plat.form.model.dto.AccountDTO;
 import com.truechain.task.plat.form.model.entity.AuthRole;
 import com.truechain.task.plat.form.model.entity.AuthUser;
 import com.truechain.task.plat.form.repository.AuthUserRepository;
 import com.truechain.task.plat.form.service.UserService;
-import com.truechain.task.plat.form.util.CommonUtil;
-import com.truechain.task.plat.form.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,36 +25,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthUser getUserByUserName(String userName) {
-        AuthUser authUser = userRepository.findByUsername(userName);
-        return authUser;
+    public Page<AuthUser> getUserPageByCriteria(AuthUser user, Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
-    @Override
-    public int countByUserName(String userName) {
-        return userRepository.countByUsername(userName);
-    }
 
     @Override
-    public void addUser(AuthUser user) {
-        String salt = CommonUtil.getRandomString(6);
-        String realPassword = MD5Util.md5(user.getPassword() + salt);
-        user.setPassword(realPassword);
-        user.setSalt(salt);
-        userRepository.save(user);
-    }
-
-    @Override
-    public Page<AuthUser> getUserPageByCriteria(Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public void addUserRole(AuthRole role) {
-        AuthUser user = getUserById(role.getUserId());
+    public void addUserRole(Integer userId, Integer roleId) {
+        AuthUser user = getUserById(userId);
         if (null == user) {
             throw new BusinessException("用户不存在");
         }
+        AuthRole role = new AuthRole();
+        role.setId(roleId);
         if (CollectionUtils.isEmpty(user.getRoles())) {
             user.setRoles(Collections.singletonList(role));
         } else {
@@ -67,7 +47,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AccountDTO getAccount(String userName) {
-        return null;
+    public void deleteUserRole(Integer userId, Integer roleId) {
+        AuthUser user = getUserById(userId);
+        if (null == user) {
+            throw new BusinessException("用户不存在");
+        }
+        if (CollectionUtils.isEmpty(user.getRoles())) {
+            AuthRole role = new AuthRole();
+            role.setId(roleId);
+            user.getRoles().remove(role);
+        }
+        userRepository.save(user);
     }
+
 }
