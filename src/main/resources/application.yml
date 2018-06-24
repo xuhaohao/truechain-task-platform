@@ -23,7 +23,6 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.security: debug
 app:
   swagger:
     enable: true
