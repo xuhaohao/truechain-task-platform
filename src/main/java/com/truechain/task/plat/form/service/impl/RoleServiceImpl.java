@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 角色service
  */
@@ -42,6 +44,11 @@ public class RoleServiceImpl implements RoleService {
     public Page<AuthRole> getRolePageByCriteria(AuthRole role, Pageable pageable) {
         Page<AuthRole> rolePage = roleRepository.findAll(pageable);
         return rolePage;
+    }
+
+    @Override
+    public List<AuthRole> getListRoleByCriteria(AuthRole role) {
+        return null;
     }
 
     @Override
