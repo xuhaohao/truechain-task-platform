@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.truechain</groupId>
-    <artifactId>truechain-task-platform</artifactId>
+    <artifactId>truechain-task-admin</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>truechain-task-platform</name>
+    <name>truechain-task-admin</name>
     <description>任务管理后台</description>
 
     <parent>

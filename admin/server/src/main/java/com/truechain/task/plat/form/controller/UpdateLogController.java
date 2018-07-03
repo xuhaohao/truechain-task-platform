@@ -3,19 +3,22 @@ package com.truechain.task.plat.form.controller;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
 import com.truechain.task.plat.form.model.entity.SysUpdateLog;
-import com.truechain.task.plat.form.service.SysUpdateLogService;
+import com.truechain.task.plat.form.service.UpdateLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 更新日志Controller
+ */
 @RestController
 @RequestMapping("/updateLog")
-public class UpdateLogController {
+public class UpdateLogController extends BasicController {
 
     @Autowired
-    private SysUpdateLogService updateLogService;
+    private UpdateLogService updateLogService;
 
     /**
      * 获取更新日志记录

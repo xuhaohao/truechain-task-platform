@@ -4,7 +4,7 @@ import com.truechain.task.plat.form.model.entity.SysUpdateLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface SysUpdateLogService {
+public interface UpdateLogService {
 
 
     /**

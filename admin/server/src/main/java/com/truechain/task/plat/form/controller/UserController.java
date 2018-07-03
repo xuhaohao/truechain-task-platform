@@ -3,19 +3,22 @@ package com.truechain.task.plat.form.controller;
 import com.truechain.task.plat.form.core.WrapMapper;
 import com.truechain.task.plat.form.core.Wrapper;
 import com.truechain.task.plat.form.model.entity.SysUser;
-import com.truechain.task.plat.form.service.SysUserService;
+import com.truechain.task.plat.form.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 用户Controller
+ */
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BasicController {
 
     @Autowired
-    private SysUserService userService;
+    private UserService userService;
 
     /**
      * 获取用户记录
