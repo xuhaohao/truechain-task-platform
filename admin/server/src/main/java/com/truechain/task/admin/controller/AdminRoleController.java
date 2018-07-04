@@ -28,7 +28,7 @@ public class AdminRoleController extends BasicController {
      * 授权资源给角色
      */
     @PostMapping("/authorityRoleResource")
-    public Wrapper authorityRoleResource(@RequestParam Integer roleId, @RequestParam Integer resourceId) {
+    public Wrapper authorityRoleResource(@RequestParam Integer roleId, @RequestParam Long resourceId) {
         roleService.addRoleResource(roleId, resourceId);
         return WrapMapper.ok();
     }
@@ -37,7 +37,7 @@ public class AdminRoleController extends BasicController {
      * 删除对应的角色的授权资源
      */
     @DeleteMapping("/deleteAuthorityRoleResource")
-    public Wrapper deleteAuthorityRoleResource(@RequestParam Integer roleId, @RequestParam Integer resourceId) {
+    public Wrapper deleteAuthorityRoleResource(@RequestParam Integer roleId, @RequestParam Long resourceId) {
         roleService.deleteRoleResource(roleId, resourceId);
         return WrapMapper.ok();
     }

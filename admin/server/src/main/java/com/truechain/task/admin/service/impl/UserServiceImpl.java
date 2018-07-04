@@ -1,74 +1,47 @@
 package com.truechain.task.admin.service.impl;
 
-import com.truechain.task.admin.core.BusinessException;
-import com.truechain.task.admin.model.entity.AuthUser;
-import com.truechain.task.admin.repository.AuthUserRepository;
+import com.google.common.base.Preconditions;
+import com.truechain.task.admin.model.entity.SysUser;
+import com.truechain.task.admin.model.enums.AuditStatusEnum;
+import com.truechain.task.admin.repository.SysUserRepository;
 import com.truechain.task.admin.service.UserService;
-import com.truechain.task.admin.util.MD5Util;
-import com.truechain.task.admin.model.entity.AuthRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
-import java.util.Collections;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private AuthUserRepository userRepository;
+    private SysUserRepository userRepository;
 
     @Override
-    public void addUser(AuthUser user) {
-        if (!StringUtils.isEmpty(user.getPassword())) {
-            String password = user.getPassword();
-            user.setPassword(MD5Util.generate(password));
-        }
-        userRepository.save(user);
+    public Page<SysUser> getUserPage(SysUser user, Pageable pageable) {
+        Page<SysUser> userPage = userRepository.findAll(pageable);
+        return userPage;
     }
 
     @Override
-    public AuthUser getUserById(Integer userId) {
-        return null;
+    public SysUser getUserInfo(Long userId) {
+        SysUser user = userRepository.findOne(userId);
+        return user;
     }
 
     @Override
-    public Page<AuthUser> getUserPageByCriteria(AuthUser user, Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-
-
-    @Override
-    public void addUserRole(Integer userId, Integer roleId) {
-        AuthUser user = getUserById(userId);
-        if (null == user) {
-            throw new BusinessException("用户不存在");
-        }
-        AuthRole role = new AuthRole();
-        role.setId(roleId);
-        if (CollectionUtils.isEmpty(user.getRoles())) {
-            user.setRoles(Collections.singletonList(role));
-        } else {
-            user.getRoles().add(role);
-        }
-        userRepository.save(user);
+    public SysUser updateUser(SysUser user) {
+        SysUser sysUser = userRepository.findOne(user.getId());
+        Preconditions.checkArgument(null != sysUser, "该用户不存在");
+        sysUser.setPersonName(user.getPersonName());
+        userRepository.save(sysUser);
+        return sysUser;
     }
 
     @Override
-    public void deleteUserRole(Integer userId, Integer roleId) {
-        AuthUser user = getUserById(userId);
-        if (null == user) {
-            throw new BusinessException("用户不存在");
-        }
-        if (CollectionUtils.isEmpty(user.getRoles())) {
-            AuthRole role = new AuthRole();
-            role.setId(roleId);
-            user.getRoles().remove(role);
-        }
-        userRepository.save(user);
+    public void auditUser(Long userId) {
+        SysUser sysUser = userRepository.findOne(userId);
+        Preconditions.checkArgument(null != sysUser, "该用户不存在");
+        sysUser.setAuditStatus(AuditStatusEnum.AUDITED.getCode());
+        userRepository.save(sysUser);
     }
-
 }

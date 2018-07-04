@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface RoleService {
 
-    void addRoleResource(Integer roleId, Integer resourceId);
+    void addRoleResource(Integer roleId, Long resourceId);
 
-    void deleteRoleResource(Integer roleId, Integer resourceId);
+    void deleteRoleResource(Integer roleId, Long resourceId);
 
     Page<AuthRole> getRolePageByCriteria(AuthRole role, Pageable pageable);
 
