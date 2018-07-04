@@ -19,6 +19,7 @@ spring:
     hibernate:
       naming:
         physical-strategy: com.truechain.task.admin.core.ImprovedNamingStrategy
+      ddl-auto: update
     show-sql: true
 logging:
   level:

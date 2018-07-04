@@ -1,17 +1,19 @@
 package com.truechain.task.admin.model.entity;
 
-import java.util.Date;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 操作日志
  */
-public class AuthOperationLog {
-
-    private Integer id;
+@Table(name = "AuthOperationLog")
+@Entity
+@DynamicUpdate
+public class AuthOperationLog extends BaseEntity {
 
     private String logName;
-
-    private String userId;
 
     private String api;
 
@@ -21,30 +23,12 @@ public class AuthOperationLog {
 
     private String message;
 
-    private Date createTime;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getLogName() {
         return logName;
     }
 
     public void setLogName(String logName) {
         this.logName = logName;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getApi() {
@@ -79,11 +63,4 @@ public class AuthOperationLog {
         this.message = message;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }
