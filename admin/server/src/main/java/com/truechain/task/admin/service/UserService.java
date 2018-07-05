@@ -1,18 +1,38 @@
 package com.truechain.task.admin.service;
 
-import com.truechain.task.admin.model.entity.AuthUser;
+import com.truechain.task.admin.model.entity.SysUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-    void addUser(AuthUser user);
+    /**
+     * 获取用户记录
+     *
+     * @param user
+     * @param pageable
+     */
+    Page<SysUser> getUserPage(SysUser user, Pageable pageable);
 
-    AuthUser getUserById(Integer userId);
+    /**
+     * 获取用户详情
+     *
+     * @param userId
+     */
+    SysUser getUserInfo(Long userId);
 
-    Page<AuthUser> getUserPageByCriteria(AuthUser user, Pageable pageable);
+    /**
+     * 修改用户
+     *
+     * @param user
+     */
+    SysUser updateUser(SysUser user);
 
-    void addUserRole(Integer userId, Integer roleId);
+    /**
+     * 审核用户
+     *
+     * @param userId
+     */
+    void auditUser(Long userId);
 
-    void deleteUserRole(Integer userId, Integer roleId);
 }

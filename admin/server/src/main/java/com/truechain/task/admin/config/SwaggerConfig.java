@@ -20,7 +20,7 @@ public class SwaggerConfig {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.truechain.task.plat.form.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.truechain.task.admin.controller"))
                 .paths(PathSelectors.any()).build();
     }
 

@@ -23,7 +23,7 @@ public class RoleServiceImpl implements RoleService {
     private AuthRoleRepository roleRepository;
 
     @Override
-    public void addRoleResource(Integer roleId, Integer resourceId) {
+    public void addRoleResource(Integer roleId, Long resourceId) {
         AuthRole role = roleRepository.findOne(roleId);
         AuthResource authResource = new AuthResource();
         authResource.setId(resourceId);
@@ -32,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void deleteRoleResource(Integer roleId, Integer resourceId) {
+    public void deleteRoleResource(Integer roleId, Long resourceId) {
         AuthRole role = roleRepository.findOne(roleId);
         AuthResource authResource = new AuthResource();
         authResource.setId(resourceId);

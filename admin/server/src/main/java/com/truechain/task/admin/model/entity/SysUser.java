@@ -2,9 +2,11 @@ package com.truechain.task.admin.model.entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Table(name = "SysUser")
+@Entity
 @DynamicUpdate
 public class SysUser extends BaseEntity {
 

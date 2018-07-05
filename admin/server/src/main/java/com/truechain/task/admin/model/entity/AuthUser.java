@@ -13,30 +13,48 @@ import java.util.List;
 public class AuthUser extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 账号
+     */
     private String username;
-
+    /**
+     * 密码
+     */
     private String password;
-
-    private String salt;
-
+    /**
+     * 实际姓名
+     */
     private String realName;
 
     private String avatar;
-
+    /**
+     * 电话
+     */
     private String phone;
-
+    /**
+     * 邮箱
+     */
     private String email;
-
+    /**
+     * 性别
+     */
     private Byte sex;
-
+    /**
+     * 状态
+     */
     private Short status;
-
+    /**
+     * 来源
+     */
     private Byte resource;
-
+    /**
+     * 角色ID
+     */
     @Transient
     private Integer roleId;
-
+    /**
+     * 角色
+     */
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "auth_user_role")
@@ -56,14 +74,6 @@ public class AuthUser extends BaseEntity implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getRealName() {

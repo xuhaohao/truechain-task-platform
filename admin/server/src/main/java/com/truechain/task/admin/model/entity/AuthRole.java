@@ -13,20 +13,32 @@ import java.util.List;
 public class AuthRole extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    /**
+     * 编码
+     */
     private String code;
-
+    /**
+     * 名称
+     */
     private String name;
-
+    /**
+     * 状态
+     */
     private Short status;
-
+    /**
+     * 用户ID
+     */
     @Transient
     private Integer userId;
-
+    /**
+     * 用户
+     */
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private List<AuthUser> users;
-
+    /**
+     * 资源
+     */
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "auth_role_resource")

@@ -5,7 +5,7 @@
 	<el-col :span="24" class="toolbar" style="padding: 20px 20px 10px 20px;">
 		<el-form :inline="true" class="demo-form-inline">
 			<el-form-item>
-				<el-button  @click="addUser()" v-if="addUser">新增用户</el-button>
+				<el-button  @click.native="addUser" v-if="addUsers">新增用户</el-button>
 			</el-form-item>
 			<el-form-item>
 				<el-button @click.native.prevent="getAdmin()">
@@ -93,7 +93,7 @@ import { adminList } from "@/api/getData";
 export default {
   data() {
     return {
-      addUser: true,
+      addUsers: true,
       editUser: true,
       deleteUser: true,
       tableData: [],
